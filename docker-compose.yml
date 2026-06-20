@@ -1,0 +1,107 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: book-order-sqlserver
+    environment:
+        ACCEPT_EULA: "Y"
+        MSSQL_SA_PASSWORD: "Aliali123@"
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: book-order-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: book-order-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      sh -c "rabbitmq-plugins enable --offline rabbitmq_tracing && rabbitmq-server"
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: CatalogService/Dockerfile
+    container_name: book-order-catalog-service
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__BookOrderManagementDB: Server=sqlserver,1433;Database=BookOrderManagementDb;User Id=sa;Password=Aliali123@;TrustServerCertificate=True;Encrypt=false;MultipleActiveResultSets=true;
+      ConnectionStrings__Redis: redis:6379
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+      RabbitMq__ExchangeName: book-order-management
+      RabbitMq__QueuePrefix: catalog
+    ports:
+      - "5001:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  order-service:
+    build:
+      context: .
+      dockerfile: OrderService/Dockerfile
+    container_name: book-order-order-service
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__BookOrderManagementDB: Server=sqlserver,1433;Database=BookOrderManagementDb;User Id=sa;Password=Aliali123@;TrustServerCertificate=True;Encrypt=false;MultipleActiveResultSets=true;
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+      RabbitMq__ExchangeName: book-order-management
+      RabbitMq__QueuePrefix: order
+
+    ports:
+      - "5002:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+  redis-data:
+  rabbitmq-data:

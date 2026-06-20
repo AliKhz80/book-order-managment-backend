@@ -1,0 +1,77 @@
+using CatalogService.Application.Extentions.Models;
+using CatalogService.Application.Features.Book.Commands.AddBook;
+using CatalogService.Application.Features.Book.Commands.DeleteBook;
+using CatalogService.Application.Features.Book.Commands.UpdateBook;
+using CatalogService.Application.Features.Book.Queries.GetBookModelById;
+using CatalogService.Application.Features.Book.Queries.GetBooksByFilter;
+using CatalogService.Application.Features.Book.ViewModels;
+using CatalogService.Domain.Enums;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+namespace CatalogService.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class BooksController(IMediator mediator) : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<Paging<BookViewModel>>> GetByFilter(
+        [FromQuery] string? title,
+        [FromQuery] string? author,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] OrderType orderType = OrderType.Ascending,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await mediator.Send(
+            new GetBooksByFilterQuery(title, author, pageSize, pageNumber, orderType),
+            cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<BookViewModel>> GetById(
+        [Range(1, long.MaxValue)] long id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetBooklByIdQuery(id), cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<long>> Add(
+        [FromBody] AddBookCommand command,
+        CancellationToken cancellationToken)
+    {
+        var id = await mediator.Send(command, cancellationToken);
+
+        return CreatedAtAction(nameof(GetById), new { id }, id);
+    }
+
+    [HttpPut("{id:long}")]
+    public async Task<IActionResult> Update(
+        [Range(1, long.MaxValue)] long id,
+        [FromBody] UpdateBookCommand request,
+        CancellationToken cancellationToken)
+    {
+        await mediator.Send(
+            new UpdateBookCommand(id, request.Title, request.Author, request.Stock, request.Price),
+            cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:long}")]
+    public async Task<IActionResult> Delete(
+        [Range(1, long.MaxValue)] long id,
+        CancellationToken cancellationToken)
+    {
+        await mediator.Send(new DeleteBookCommand(id), cancellationToken);
+
+        return NoContent();
+    }
+}
