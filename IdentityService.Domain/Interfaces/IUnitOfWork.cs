@@ -1,10 +1,10 @@
-﻿using IdentityService.Domain.Interfaces.BusinessIRepositories;
+﻿using IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.UserRepository;
 
 namespace IdentityService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-       public IUserRepository UserRepository { get; }
+       public IUserRepositoryCommond UserRepository { get; }
 
         void Commit();
 

@@ -1,6 +1,6 @@
 ﻿using IdentityService.Domain.Interfaces;
-using IdentityService.Domain.Interfaces.BusinessIRepositories;
-using IdentityService.Infrastructure.BusinessRepositories;
+using IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.UserRepository;
+using IdentityService.Infrastructure.Repositories.BusinessRepositories.UserRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +20,7 @@ public static class DependencyInjection
     private static IServiceCollection RegisterRepositories(this IServiceCollection services)
     {
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-        services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+        services.AddScoped(typeof(IUserRepositoryCommond), typeof(UserRepositoryCommond));
         return services;
     }
 

@@ -19,22 +19,12 @@ namespace Auth
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(string userId, string email, IEnumerable<Claim>? customClaims = null)
+        public string GenerateToken(IEnumerable<Claim> customClaims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(JwtRegisteredClaimNames.Email, email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-            if (customClaims != null)
-            {
-                claims.AddRange(customClaims);
-            }
+            var claims = new List<Claim>(customClaims);
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,

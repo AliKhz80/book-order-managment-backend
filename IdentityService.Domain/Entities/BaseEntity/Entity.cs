@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityService.Domain.EntityConfigs;
+namespace IdentityService.Domain.Entities.BaseEntity;
 
 public abstract class Entity<T>
 {

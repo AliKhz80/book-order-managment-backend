@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace IdentityService.Domain.Interfaces.Specification;
+namespace IdentityService.Domain.Specification;
 
 public abstract class Specification<TEntity>
 {

@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Domain.EntityConfigs;
+﻿namespace IdentityService.Domain.Entities.BaseEntity;
 
 public abstract class TrackableEntity<T> : Entity<T>
 {

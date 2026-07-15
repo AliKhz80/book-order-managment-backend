@@ -1,4 +1,4 @@
-﻿using IdentityService.Domain.EntityConfigs;
+﻿using IdentityService.Domain.Entities.BaseEntity;
 using IdentityService.Domain.Interfaces;
 using IdentityService.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -6,8 +6,8 @@ using System.Numerics;
 
 namespace IdentityService.Infrastructure.Repositories
 {
-    public class Repository<TEntity,T>(DbContext _Dbcontext , ICurrentUser currentUser) : ReadOnlyRepository<TEntity,T>(_Dbcontext),
-    IRepository<TEntity , T> where TEntity : Entity<T> where T : INumber<T>
+    public class RepositoryCommond<TEntity,T>(DbContext _Dbcontext , ICurrentUser currentUser) : RepositoryQuery<TEntity,T>(_Dbcontext),
+    IRepositoryCommond<TEntity , T> where TEntity : Entity<T> where T : INumber<T>
     {
 
 

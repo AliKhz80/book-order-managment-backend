@@ -1,5 +1,5 @@
 ﻿using IdentityService.Domain.Interfaces;
-using IdentityService.Domain.Interfaces.BusinessIRepositories;
+using IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.UserRepository;
 
 namespace IdentityService.Infrastructure
 {
@@ -9,7 +9,7 @@ namespace IdentityService.Infrastructure
 
         public UnitOfWork(
             IdentityDbContext context,
-            IUserRepository _userRepository)
+            IUserRepositoryCommond _userRepository)
         {
             _context = context;
             UserRepository = _userRepository;
@@ -17,7 +17,7 @@ namespace IdentityService.Infrastructure
         }
 
 
-        public IUserRepository UserRepository{ get; }
+        public IUserRepositoryCommond UserRepository{ get; }
 
         public void Commit() => _context.SaveChanges();
 

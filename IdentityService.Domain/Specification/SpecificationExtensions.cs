@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityService.Domain.Interfaces.Specification
+namespace IdentityService.Domain.Specification
 {
     public static class SpecificationExtensions
     {

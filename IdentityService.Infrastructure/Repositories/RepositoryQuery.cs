@@ -1,14 +1,14 @@
-﻿using IdentityService.Domain.EntityConfigs;
+﻿using IdentityService.Domain.Entities.BaseEntity;
 using IdentityService.Domain.Interfaces.Repositories;
-using IdentityService.Domain.Interfaces.Specification;
+using IdentityService.Domain.Specification;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 
 namespace IdentityService.Infrastructure.Repositories;
 
-public class ReadOnlyRepository<TEntity ,T>(
+public class RepositoryQuery<TEntity ,T>(
     DbContext dbContext
-    ) : RepositoryProperties<TEntity ,T>(dbContext),IReadOnlyRepository<TEntity ,T> where TEntity : Entity<T> where T : INumber<T>
+    ) : RepositoryProperties<TEntity ,T>(dbContext),IRepositoryQuery<TEntity ,T> where TEntity : Entity<T> where T : INumber<T>
 {
 
     public async Task<TEntity?> GetByIdAsync(T id, CancellationToken cancellationToken = default)

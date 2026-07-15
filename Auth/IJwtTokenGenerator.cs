@@ -9,6 +9,6 @@ namespace Auth
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(string userId, string email, IEnumerable<Claim>? customClaims = null);
+        string GenerateToken(IEnumerable<Claim> customClaims);
     }
 }

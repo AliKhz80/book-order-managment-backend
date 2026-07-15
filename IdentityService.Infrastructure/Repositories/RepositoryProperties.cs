@@ -1,4 +1,4 @@
-﻿using IdentityService.Domain.EntityConfigs;
+﻿using IdentityService.Domain.Entities.BaseEntity;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 
