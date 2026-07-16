@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityService.Domain.Interfaces
+namespace IdentityService.Application.Common.CurrentUser
 {
     public interface ICurrentUser
     {

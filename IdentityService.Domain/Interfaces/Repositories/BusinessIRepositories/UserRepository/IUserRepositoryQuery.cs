@@ -1,4 +1,4 @@
-﻿using IdentityService.Domain.Entities;
+using IdentityService.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +9,6 @@ namespace IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.U
 {
     public interface IUserRepositoryQuery : IRepositoryQuery<User , long>
     {
+        Task<User?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default);
     }
 }

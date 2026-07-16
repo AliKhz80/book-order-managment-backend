@@ -1,5 +1,5 @@
-﻿using IdentityService.Domain.Entities;
-using IdentityService.Domain.Interfaces;
+﻿using IdentityService.Application.Common.CurrentUser;
+using IdentityService.Domain.Entities;
 using IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.UserRepository;
 
 namespace IdentityService.Infrastructure.Repositories.BusinessRepositories.UserRepository

@@ -1,5 +1,5 @@
-﻿using IdentityService.Domain.Entities.BaseEntity;
-using IdentityService.Domain.Interfaces;
+﻿using IdentityService.Application.Common.CurrentUser;
+using IdentityService.Domain.Entities.BaseEntity;
 using IdentityService.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
