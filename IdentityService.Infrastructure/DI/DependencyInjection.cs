@@ -29,7 +29,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<IdentityDbContext>(options =>
         options.UseSqlServer(
-            configuration.GetConnectionString("BookOrderManagementIdentityDB"),
+            configuration.GetConnectionString("BookOrderManagementDB"),
             sqlServerOptionsAction: sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(
