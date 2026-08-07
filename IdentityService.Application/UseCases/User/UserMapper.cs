@@ -1,6 +1,6 @@
 using AutoMapper;
-using IdentityService.Domain.Entities;
 using IdentityService.Application.UseCases.User.Commonds.RegisterUserCommand;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace IdentityService.Application.UseCases.User
 {
@@ -10,7 +10,7 @@ namespace IdentityService.Application.UseCases.User
         {
             var config = new MapperConfiguration(cfg =>
                 cfg.CreateMap<RegisterUserCommandRequest, Domain.Entities.User>()
-                .ForMember(dest => dest.Password, opt => opt.Ignore()) , null);
+                .ForMember(dest => dest.Password, opt => opt.Ignore()), NullLoggerFactory.Instance);
 
             var mapper = new Mapper(config);
 
