@@ -4,7 +4,9 @@ namespace IdentityService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-       public IUserRepositoryCommond UserRepository { get; }
+       public IUserRepositoryCommond UserRepositoryCommond { get; }
+       public IUserRepositoryQuery UserRepositoryQuery { get; }
+
 
         void Commit();
 

@@ -1,5 +1,5 @@
-using CatalogService.Application;
-using CatalogService.Infrastructure;
+using CatalogService.Application.DI;
+using CatalogService.Infrastructure.DI;
 
 namespace CatalogService;
 

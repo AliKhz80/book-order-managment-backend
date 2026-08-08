@@ -4,6 +4,7 @@ using IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.UserR
 using IdentityService.Application.Common.Security;
 using IdentityService.Application.UseCases.User.ViewModels;
 using System.Security.Claims;
+using IdentityService.Domain.Interfaces;
 
 namespace IdentityService.Application.UseCases.User.Queries.LoginUserQuery
 {
@@ -11,20 +12,20 @@ namespace IdentityService.Application.UseCases.User.Queries.LoginUserQuery
 
     public class LoginUserQueryHandler : IRequestHandler<LoginUserQueryRequest, UserResponseDto>
     {
-        private readonly IUserRepositoryQuery _userRepositoryQuery;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
         public LoginUserQueryHandler(
-            IUserRepositoryQuery userRepositoryQuery,
+            IUnitOfWork _unitOfWork,
             IJwtTokenGenerator jwtTokenGenerator)
         {
-            _userRepositoryQuery = userRepositoryQuery;
+            unitOfWork = _unitOfWork;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         public async Task<UserResponseDto> Handle(LoginUserQueryRequest request, CancellationToken cancellationToken)
         {
-            var user = await _userRepositoryQuery.GetByUserNameAsync(request.UserName, cancellationToken);
+            var user = await unitOfWork.UserRepositoryQuery.GetByUserNameAsync(request.UserName, cancellationToken);
             if (user == null || !PasswordHasher.Verify(request.Password, user.Password))
             {
                 throw new UnauthorizedAccessException("Invalid username or password.");

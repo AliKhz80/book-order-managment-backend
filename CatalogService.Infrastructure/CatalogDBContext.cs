@@ -1,4 +1,4 @@
-using CatalogService.Domain.Models;
+using CatalogService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Infrastructure;
@@ -13,6 +13,8 @@ public class CatalogDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("catalog");
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDBContext).Assembly);

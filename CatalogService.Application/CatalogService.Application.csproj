@@ -16,8 +16,4 @@
     <ProjectReference Include="..\CatalogService.Domain\CatalogService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Book\Commands\" />
-  </ItemGroup>
-
 </Project>

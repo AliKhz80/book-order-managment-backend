@@ -14,23 +14,20 @@ namespace IdentityService.Application.UseCases.User.Commonds.RegisterUserCommand
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommandRequest, UserResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IUserRepositoryQuery _userRepositoryQuery;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
         public RegisterUserCommandHandler(
             IUnitOfWork unitOfWork,
-            IUserRepositoryQuery userRepositoryQuery,
             IJwtTokenGenerator jwtTokenGenerator)
         {
             _unitOfWork = unitOfWork;
-            _userRepositoryQuery = userRepositoryQuery;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         public async Task<UserResponseDto> Handle(RegisterUserCommandRequest request, CancellationToken cancellationToken)
         {
             // Check if user already exists
-            var existingUser = await _userRepositoryQuery.GetByUserNameAsync(request.UserName, cancellationToken);
+            var existingUser = await _unitOfWork.UserRepositoryQuery.GetByUserNameAsync(request.UserName, cancellationToken);
             if (existingUser != null)
             {
                 throw new InvalidOperationException($"Username '{request.UserName}' is already taken.");
@@ -40,7 +37,7 @@ namespace IdentityService.Application.UseCases.User.Commonds.RegisterUserCommand
             var user = request.ToEntity();
             user.Password = PasswordHasher.Hash(request.Password);
 
-            await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
+            await _unitOfWork.UserRepositoryCommond.AddAsync(user, cancellationToken);
             await _unitOfWork.CommitAsync();
 
             // Generate JWT Token

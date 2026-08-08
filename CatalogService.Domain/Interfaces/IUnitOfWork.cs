@@ -1,10 +1,11 @@
-﻿using CatalogService.Domain.Interfaces.BusinessIRepositories;
+﻿using CatalogService.Domain.Interfaces.Repositories.BusinessIRepositories.BookRepository;
 
 namespace CatalogService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-       public IBookRepository BookRepository { get; }
+       public IBookRepositoryQuery BookRepositoryQuery { get; }
+       public IBookRepositoryCommond BookRepositoryCommond { get; }
 
         void Commit();
 

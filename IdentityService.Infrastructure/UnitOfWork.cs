@@ -9,15 +9,18 @@ namespace IdentityService.Infrastructure
 
         public UnitOfWork(
             IdentityDbContext context,
-            IUserRepositoryCommond _userRepository)
+            IUserRepositoryCommond _userRepository,
+            IUserRepositoryQuery userRepositoryQuery)
         {
             _context = context;
-            UserRepository = _userRepository;
-
+            UserRepositoryCommond = _userRepository;
+            UserRepositoryQuery = userRepositoryQuery;
         }
 
 
-        public IUserRepositoryCommond UserRepository{ get; }
+        public IUserRepositoryCommond UserRepositoryCommond{ get; }
+
+        public IUserRepositoryQuery UserRepositoryQuery {  get; }
 
         public void Commit() => _context.SaveChanges();
 

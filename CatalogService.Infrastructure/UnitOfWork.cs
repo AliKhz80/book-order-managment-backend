@@ -1,5 +1,5 @@
 ﻿using CatalogService.Domain.Interfaces;
-using CatalogService.Domain.Interfaces.BusinessIRepositories;
+using CatalogService.Domain.Interfaces.Repositories.BusinessIRepositories.BookRepository;
 
 namespace CatalogService.Infrastructure
 {
@@ -9,15 +9,18 @@ namespace CatalogService.Infrastructure
 
         public UnitOfWork(
             CatalogDBContext context,
-            IBookRepository _bookRepository)
+            IBookRepositoryQuery _bookRepository,
+            IBookRepositoryCommond _bookRepositoryCommond)
         {
             _context = context;
-            BookRepository = _bookRepository;
+            BookRepositoryCommond = _bookRepositoryCommond;
+            BookRepositoryQuery = _bookRepository;
 
         }
 
+        public IBookRepositoryQuery BookRepositoryQuery {  get; }
 
-        public IBookRepository BookRepository{ get; }
+        public IBookRepositoryCommond BookRepositoryCommond {  get; }
 
         public void Commit() => _context.SaveChanges();
 

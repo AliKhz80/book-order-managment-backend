@@ -1,11 +1,11 @@
-﻿using CatalogService.Domain.ModelConfigs;
+﻿using CatalogService.Domain.Entities.BaseEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CatalogService.Domain.Models
+namespace CatalogService.Domain.Entities
 {
     public class Book : TrackableEntity<long>
     {
