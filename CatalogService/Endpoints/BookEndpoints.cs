@@ -1,11 +1,10 @@
-using CatalogService.Application.Extentions.Models;
-using CatalogService.Application.Features.Book.Commands.DeleteBook;
-using CatalogService.Application.Features.Book.Queries.GetBookModelById;
-using CatalogService.Application.Features.Book.Queries.GetBooksByFilter;
+using CatalogService.Application.Common.QueryModels;
+using CatalogService.Application.UseCases.Book.Commands.DeleteBook;
+using CatalogService.Application.UseCases.Book.Queries.GetBookModelById;
+using CatalogService.Application.UseCases.Book.Queries.GetBooksByFilter;
 using CatalogService.Application.UseCases.Book.Commands.AddBook;
 using CatalogService.Application.UseCases.Book.Commands.UpdateBook;
 using CatalogService.Application.UseCases.Book.ViewModels;
-using CatalogService.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
