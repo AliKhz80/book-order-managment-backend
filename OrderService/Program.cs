@@ -1,11 +1,20 @@
-using OrderService;
+using OrderService.Application.Common.CurrentUser;
+using OrderService.Application.DI;
+using OrderService.Infrastructure.DI;
+using OrderService.Presentation.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.Register(builder.Configuration);
 builder.Services.AddControllers();
+
+// Add HttpContextAccessor and CurrentUser implementation
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+// Register Layers
+builder.Services.ConfigureInfrastructureLayer(builder.Configuration);
+builder.Services.ConfigureApplicationLayer();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

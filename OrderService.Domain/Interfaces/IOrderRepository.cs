@@ -1,10 +1,7 @@
-using OrderService.Domain.Models;
+using OrderService.Domain.Interfaces.Repositories.BusinessIRepositories.OrderRepository;
 
 namespace OrderService.Domain.Interfaces;
 
-public interface IOrderRepository
+public interface IOrderRepository : IOrderRepositoryCommond, IOrderRepositoryQuery
 {
-    Task AddAsync(Order order, CancellationToken cancellationToken = default);
-    Task<Order?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
-    Task UpdateAsync(Order order, CancellationToken cancellationToken = default);
 }
