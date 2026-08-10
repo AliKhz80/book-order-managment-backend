@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using CatalogService.Application.Common.QueryModels;
 using CatalogService.Application.UseCases.Book.Commands.DeleteBook;
 using CatalogService.Application.UseCases.Book.Queries.GetBookModelById;
@@ -11,8 +12,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CatalogService.Presentation.Endpoints;
 
+[ApiVersion("1.0")]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class BookEndpoints(IMediator mediator) : ControllerBase
 {
     [HttpGet]
