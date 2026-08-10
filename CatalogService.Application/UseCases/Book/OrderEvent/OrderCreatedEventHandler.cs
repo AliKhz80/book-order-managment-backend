@@ -1,8 +1,5 @@
-using CatalogService.Application.Features.Book.OrderEvent.EventModels;
 using CatalogService.Application.Messaging;
-using CatalogService.Application.UseCases.Book;
 using CatalogService.Application.UseCases.Book.OrderEvent.EventModels;
-using CatalogService.Domain.IntegrationEvents;
 using CatalogService.Domain.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -15,7 +12,7 @@ public class OrderCreatedEventHandler(
 {
     public async Task HandleAsync(OrderCreatedEvent @event, CancellationToken cancellationToken = default)
     {
-        var book = await unitOfWork.BookRepository.GetByIdAsync(@event.BookId, cancellationToken);
+        var book = await unitOfWork.BookRepositoryQuery.GetByIdAsync(@event.BookId, cancellationToken);
 
         if (book is null)
         {
@@ -31,7 +28,7 @@ public class OrderCreatedEventHandler(
 
         book.Stock -= @event.Quantity;
 
-        await unitOfWork.BookRepository.UpdateAsync(book, cancellationToken);
+        await unitOfWork.BookRepositoryCommond.UpdateAsync(book, cancellationToken);
         await unitOfWork.CommitAsync();
         await cache.RemoveAsync(BookCacheKeys.ById(book.Id), cancellationToken);
 

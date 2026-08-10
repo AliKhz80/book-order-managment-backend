@@ -10,11 +10,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace CatalogService.Controllers;
+namespace CatalogService.Presentation.Endpoints;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BooksController(IMediator mediator) : ControllerBase
+public class BookEndpoints(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<Paging<BookViewModel>>> GetByFilter(

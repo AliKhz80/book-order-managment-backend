@@ -1,6 +1,5 @@
-﻿using CatalogService.Application.Extentions.Models;
+﻿using CatalogService.Application.Common.QueryModels;
 using CatalogService.Application.UseCases.Book.ViewModels;
-using CatalogService.Domain.Enums;
 using MediatR;
 
 namespace CatalogService.Application.UseCases.Book.Queries.GetBooksByFilter;

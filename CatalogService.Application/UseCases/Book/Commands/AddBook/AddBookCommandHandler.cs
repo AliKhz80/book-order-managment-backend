@@ -8,7 +8,7 @@ public class AddBookCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<Add
 {
     public async Task<long> Handle(AddBookCommand request, CancellationToken cancellationToken)
     {
-        var book = new Domain.Models.Book
+        var book = new Domain.Entities.Book
         {
             Id = default,
             Title = request.Title,
@@ -17,7 +17,7 @@ public class AddBookCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<Add
             Price = request.Price
         };
 
-        await unitOfWork.BookRepository.AddAsync(book, cancellationToken);
+        await unitOfWork.BookRepositoryCommond.AddAsync(book, cancellationToken);
         await unitOfWork.CommitAsync();
 
         return book.Id;

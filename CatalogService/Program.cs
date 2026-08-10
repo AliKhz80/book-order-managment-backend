@@ -1,16 +1,21 @@
 using CatalogService;
 using CatalogService.Application.Common.CurrentUser;
-using CatalogService.Application.Extentions;
+using CatalogService.Application.DI;
+using CatalogService.Infrastructure.DI;
+using CatalogService.Presentation.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.Register(builder.Configuration);
+
 builder.Services.AddControllers();
 
 // Add HttpContextAccessor and CurrentUser implementation
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+// Register Layers
+builder.Services.ConfigureInfrustructorLayer(builder.Configuration);
+builder.Services.ConfigureApplicationLayer();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

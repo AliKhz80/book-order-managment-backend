@@ -11,10 +11,10 @@ public class DeleteBookCommandHandler(
 {
     public async Task Handle(DeleteBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await unitOfWork.BookRepository.GetByIdAsync(request.Id, cancellationToken)
+        var book = await unitOfWork.BookRepositoryQuery.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new Exception("Data Not Found!");
 
-        await unitOfWork.BookRepository.DeleteAsync(book, cancellationToken);
+        await unitOfWork.BookRepositoryCommond.DeleteAsync(book, cancellationToken);
         await unitOfWork.CommitAsync();
         await cache.RemoveAsync(BookCacheKeys.ById(request.Id), cancellationToken);
     }

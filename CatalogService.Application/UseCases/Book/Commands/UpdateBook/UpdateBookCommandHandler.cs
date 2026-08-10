@@ -11,15 +11,15 @@ public class UpdateBookCommandHandler(
 {
     public async Task Handle(UpdateBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await unitOfWork.BookRepository.GetByIdAsync(request.Id, cancellationToken)
+        var book = await unitOfWork.BookRepositoryQuery.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new Exception("Data Not Found!");
 
         book.Title = request.Title;
-        book.Author = request.Author;
+        book.Author = request.Author;   
         book.Stock = request.Stock;
         book.Price = request.Price;
 
-        await unitOfWork.BookRepository.UpdateAsync(book, cancellationToken);
+        await unitOfWork.BookRepositoryCommond.UpdateAsync(book, cancellationToken);
         await unitOfWork.CommitAsync();
         await cache.RemoveAsync(BookCacheKeys.ById(request.Id), cancellationToken);
     }

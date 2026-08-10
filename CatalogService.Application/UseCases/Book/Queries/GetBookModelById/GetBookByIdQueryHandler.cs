@@ -26,7 +26,7 @@ public class GetBookByIdQueryHandler(
             }
         }
 
-        var existEntity = await unitOfWork.BookRepository.GetByIdAsync(request.Id, cancellationToken)
+        var existEntity = await unitOfWork.BookRepositoryCommond.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new Exception("Data Not Found!");
 
         BookViewModel viewModel = new(existEntity.Title, existEntity.Author, existEntity.Stock, existEntity.Price);

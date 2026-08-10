@@ -1,5 +1,5 @@
-using CatalogService.Application.Extentions.Models;
-using CatalogService.Application.Features.Book.Specifications;
+using CatalogService.Application.Common.QueryModels;
+using CatalogService.Application.UseCases.Book.Specifications;
 using CatalogService.Application.UseCases.Book.ViewModels;
 using CatalogService.Domain.Interfaces;
 using MediatR;
@@ -11,7 +11,7 @@ public class GetBooksByFilterQueryHandler(IUnitOfWork unitOfWork) : IRequestHand
     public async Task<Paging<BookViewModel>> Handle(GetBooksByFilterQuery request, CancellationToken cancellationToken)
     {
         var specification = new GetBooksByFilterSpecification(request);
-        var (totalCount, data) = await unitOfWork.BookRepository.ListAsync(specification, cancellationToken);
+        var (totalCount, data) = await unitOfWork.BookRepositoryQuery.ListAsync(specification, cancellationToken);
 
         var viewModel = data.Select(book =>
         {
