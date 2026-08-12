@@ -1,16 +1,17 @@
 using Asp.Versioning;
-using CatalogService.Application.Common.QueryModels;
-using CatalogService.Application.UseCases.Book.Commands.DeleteBook;
-using CatalogService.Application.UseCases.Book.Queries.GetBookModelById;
-using CatalogService.Application.UseCases.Book.Queries.GetBooksByFilter;
-using CatalogService.Application.UseCases.Book.Commands.AddBook;
-using CatalogService.Application.UseCases.Book.Commands.UpdateBook;
-using CatalogService.Application.UseCases.Book.ViewModels;
+using BuildingBlocks.Behaviors;
+using BuildingBlocks.Pagination;
+using CatalogService.UseCases.Book.Commands.AddBook;
+using CatalogService.UseCases.Book.Commands.DeleteBook;
+using CatalogService.UseCases.Book.Commands.UpdateBook;
+using CatalogService.UseCases.Book.Queries.GetBookModelById;
+using CatalogService.UseCases.Book.Queries.GetBooksByFilter;
+using CatalogService.UseCases.Book.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace CatalogService.Presentation.Endpoints;
+namespace CatalogService.Endpoints;
 
 [ApiVersion("1.0")]
 [ApiController]
@@ -18,7 +19,7 @@ namespace CatalogService.Presentation.Endpoints;
 public class BookEndpoints(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<Paging<BookViewModel>>> GetByFilter(
+    public async Task<ActionResult<PaginatedResult<BookViewModel>>> GetByFilter(
         [FromQuery] string? title,
         [FromQuery] string? author,
         [FromQuery] int pageSize = 20,
@@ -26,10 +27,14 @@ public class BookEndpoints(IMediator mediator) : ControllerBase
         [FromQuery] OrderType orderType = OrderType.Ascending,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(
-            new GetBooksByFilterQuery(title, author, pageSize, pageNumber, orderType),
-            cancellationToken);
+        var query = new GetBooksByFilterQuery(title, author, pageSize, pageNumber, orderType);
+        var (isValid, errors) = query.Validate();
+        if (!isValid)
+        {
+            return BadRequest(new { errors });
+        }
 
+        var result = await mediator.Send(query, cancellationToken);
         return Ok(result);
     }
 
@@ -38,8 +43,7 @@ public class BookEndpoints(IMediator mediator) : ControllerBase
         [Range(1, long.MaxValue)] long id,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBooklByIdQuery(id), cancellationToken);
-
+        var result = await mediator.Send(new GetBookByIdQuery(id), cancellationToken);
         return Ok(result);
     }
 
@@ -48,8 +52,13 @@ public class BookEndpoints(IMediator mediator) : ControllerBase
         [FromBody] AddBookCommand command,
         CancellationToken cancellationToken)
     {
-        var id = await mediator.Send(command, cancellationToken);
+        var (isValid, errors) = command.Validate();
+        if (!isValid)
+        {
+            return BadRequest(new { errors });
+        }
 
+        var id = await mediator.Send(command, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
@@ -59,10 +68,14 @@ public class BookEndpoints(IMediator mediator) : ControllerBase
         [FromBody] UpdateBookCommand request,
         CancellationToken cancellationToken)
     {
-        await mediator.Send(
-            new UpdateBookCommand(id, request.Title, request.Author, request.Stock, request.Price),
-            cancellationToken);
+        var command = new UpdateBookCommand(id, request.Title, request.Author, request.Stock, request.Price);
+        var (isValid, errors) = command.Validate();
+        if (!isValid)
+        {
+            return BadRequest(new { errors });
+        }
 
+        await mediator.Send(command, cancellationToken);
         return NoContent();
     }
 
@@ -72,7 +85,6 @@ public class BookEndpoints(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         await mediator.Send(new DeleteBookCommand(id), cancellationToken);
-
         return NoContent();
     }
 }

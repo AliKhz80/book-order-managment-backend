@@ -1,8 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-using MediatR;
+using BuildingBlocks.CQRS;
 
-namespace CatalogService.Application.UseCases.Book.Commands.DeleteBook;
+namespace CatalogService.UseCases.Book.Commands.DeleteBook;
 
 public record DeleteBookCommand(
     long Id
-) : IRequest;
+) : ICommand;

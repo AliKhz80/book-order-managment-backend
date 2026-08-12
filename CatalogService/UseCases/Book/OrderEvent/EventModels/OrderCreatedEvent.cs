@@ -1,6 +1,3 @@
-﻿using CatalogService.Application.Messaging;
+namespace CatalogService.UseCases.Book.OrderEvent.EventModels;
 
-namespace CatalogService.Application.UseCases.Book.OrderEvent.EventModels
-{
-    public record OrderCreatedEvent(long OrderId , long BookId , long Quantity) : IIntegrationEvent;
-}
+public record OrderCreatedEvent(long OrderId, long BookId, long Quantity);

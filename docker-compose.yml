@@ -16,6 +16,23 @@ services:
       retries: 10
       start_period: 30s
 
+  postgres:
+    image: postgres:16-alpine
+    container_name: book-order-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: PostgrePassword123!
+      POSTGRES_DB: catalogdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7-alpine
     container_name: book-order-redis
@@ -57,7 +74,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__BookOrderManagementDB: Server=sqlserver,1433;Database=BookOrderManagementDb;User Id=sa;Password=Aliali123@;TrustServerCertificate=True;Encrypt=false;MultipleActiveResultSets=true;
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=catalogdb;Username=postgres;Password=PostgrePassword123!
       ConnectionStrings__Redis: redis:6379
       RabbitMq__HostName: rabbitmq
       RabbitMq__Port: 5672
@@ -68,7 +85,7 @@ services:
     ports:
       - "5001:8080"
     depends_on:
-      sqlserver:
+      postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -101,12 +118,11 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-
   identity-service:
     build:
       context: .
-      dockerfile: IdentityService/Dockerfile
-    container_name: book-order-order-service
+      dockerfile: Identity/Dockerfile
+    container_name: book-order-identity-service
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
@@ -119,8 +135,8 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-
 volumes:
   sqlserver-data:
+  postgres-data:
   redis-data:
   rabbitmq-data:

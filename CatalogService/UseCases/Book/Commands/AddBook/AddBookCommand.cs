@@ -1,14 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-using MediatR;
+using BuildingBlocks.CQRS;
 
-namespace CatalogService.Application.UseCases.Book.Commands.AddBook;
+namespace CatalogService.UseCases.Book.Commands.AddBook;
 
 public record AddBookCommand(
     string Title,
-
     string Author,
-
     long Stock,
-
     int Price
-) : IRequest<long>;
+) : ICommand<long>;

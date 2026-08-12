@@ -1,8 +1,14 @@
-﻿using CatalogService.Application.Common.QueryModels;
-using CatalogService.Application.UseCases.Book.ViewModels;
-using MediatR;
+using BuildingBlocks.CQRS;
+using BuildingBlocks.Pagination;
+using CatalogService.UseCases.Book.ViewModels;
 
-namespace CatalogService.Application.UseCases.Book.Queries.GetBooksByFilter;
+namespace CatalogService.UseCases.Book.Queries.GetBooksByFilter;
+
+public enum OrderType
+{
+    Ascending,
+    Descending
+}
 
 public record GetBooksByFilterQuery(
     string? Title,
@@ -10,5 +16,4 @@ public record GetBooksByFilterQuery(
     int PageSize = 20,
     int PageNumber = 1,
     OrderType OrderType = OrderType.Ascending
-    ) : IRequest<Paging<BookViewModel>>;
-
+) : IQuery<PaginatedResult<BookViewModel>>;

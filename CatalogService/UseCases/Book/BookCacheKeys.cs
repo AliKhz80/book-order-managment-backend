@@ -1,4 +1,4 @@
-namespace CatalogService.Application.UseCases.Book;
+namespace CatalogService.UseCases.Book;
 
 public static class BookCacheKeys
 {

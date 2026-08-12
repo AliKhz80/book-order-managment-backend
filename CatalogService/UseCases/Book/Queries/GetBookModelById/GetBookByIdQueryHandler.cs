@@ -1,17 +1,19 @@
 using System.Text.Json;
-using CatalogService.Application.UseCases.Book;
-using CatalogService.Application.UseCases.Book.ViewModels;
-using CatalogService.Domain.Interfaces;
-using MediatR;
+using BuildingBlocks.CQRS;
+using BuildingBlocks.Exceptions;
+using CatalogService.Entities;
+using CatalogService.UseCases.Book;
+using CatalogService.UseCases.Book.ViewModels;
+using Marten;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace CatalogService.Application.UseCases.Book.Queries.GetBookModelById;
+namespace CatalogService.UseCases.Book.Queries.GetBookModelById;
 
 public class GetBookByIdQueryHandler(
-    IUnitOfWork unitOfWork,
-    IDistributedCache cache) : IRequestHandler<GetBooklByIdQuery, BookViewModel>
+    IDocumentSession session,
+    IDistributedCache cache) : IQueryHandler<GetBookByIdQuery, BookViewModel>
 {
-    public async Task<BookViewModel> Handle(GetBooklByIdQuery request, CancellationToken cancellationToken)
+    public async Task<BookViewModel> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
     {
         var cacheKey = BookCacheKeys.ById(request.Id);
         var cachedBook = await cache.GetStringAsync(cacheKey, cancellationToken);
@@ -26,10 +28,10 @@ public class GetBookByIdQueryHandler(
             }
         }
 
-        var existEntity = await unitOfWork.BookRepositoryCommond.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new Exception("Data Not Found!");
+        var existEntity = await session.LoadAsync<Entities.Book>(request.Id, cancellationToken)
+            ?? throw new NotFoundException("Book", request.Id);
 
-        BookViewModel viewModel = new(existEntity.Title, existEntity.Author, existEntity.Stock, existEntity.Price);
+        BookViewModel viewModel = new(existEntity.Id, existEntity.Title, existEntity.Author, existEntity.Stock, existEntity.Price);
 
         await cache.SetStringAsync(
             cacheKey,

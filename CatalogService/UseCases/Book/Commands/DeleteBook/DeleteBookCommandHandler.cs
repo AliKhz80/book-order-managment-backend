@@ -1,21 +1,27 @@
-using CatalogService.Application.UseCases.Book;
-using CatalogService.Domain.Interfaces;
+using BuildingBlocks.CQRS;
+using BuildingBlocks.Exceptions;
+using CatalogService.Entities;
+using CatalogService.UseCases.Book;
+using Marten;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace CatalogService.Application.UseCases.Book.Commands.DeleteBook;
+namespace CatalogService.UseCases.Book.Commands.DeleteBook;
 
 public class DeleteBookCommandHandler(
-    IUnitOfWork unitOfWork,
-    IDistributedCache cache) : IRequestHandler<DeleteBookCommand>
+    IDocumentSession session,
+    IDistributedCache cache) : ICommandHandler<DeleteBookCommand>
 {
-    public async Task Handle(DeleteBookCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await unitOfWork.BookRepositoryQuery.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new Exception("Data Not Found!");
+        var book = await session.LoadAsync<Entities.Book>(request.Id, cancellationToken)
+            ?? throw new NotFoundException("Book", request.Id);
 
-        await unitOfWork.BookRepositoryCommond.DeleteAsync(book, cancellationToken);
-        await unitOfWork.CommitAsync();
+        session.Delete(book);
+        await session.SaveChangesAsync(cancellationToken);
+
         await cache.RemoveAsync(BookCacheKeys.ById(request.Id), cancellationToken);
+
+        return Unit.Value;
     }
 }

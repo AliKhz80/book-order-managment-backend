@@ -1,26 +1,42 @@
-using CatalogService.Application.Common.QueryModels;
-using CatalogService.Application.UseCases.Book.Specifications;
-using CatalogService.Application.UseCases.Book.ViewModels;
-using CatalogService.Domain.Interfaces;
-using MediatR;
+using BuildingBlocks.CQRS;
+using BuildingBlocks.Pagination;
+using CatalogService.Entities;
+using CatalogService.UseCases.Book.ViewModels;
+using Marten;
 
-namespace CatalogService.Application.UseCases.Book.Queries.GetBooksByFilter;
+namespace CatalogService.UseCases.Book.Queries.GetBooksByFilter;
 
-public class GetBooksByFilterQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetBooksByFilterQuery, Paging<BookViewModel>>
+public class GetBooksByFilterQueryHandler(IDocumentSession session)
+    : IQueryHandler<GetBooksByFilterQuery, PaginatedResult<BookViewModel>>
 {
-    public async Task<Paging<BookViewModel>> Handle(GetBooksByFilterQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResult<BookViewModel>> Handle(GetBooksByFilterQuery request, CancellationToken cancellationToken)
     {
-        var specification = new GetBooksByFilterSpecification(request);
-        var (totalCount, data) = await unitOfWork.BookRepositoryQuery.ListAsync(specification, cancellationToken);
+        var query = session.Query<Entities.Book>().AsQueryable();
 
-        var viewModel = data.Select(book =>
+        if (!string.IsNullOrWhiteSpace(request.Title))
         {
-            BookViewModel bookViewModel = new(book.Title, book.Author, book.Stock, book.Price);
-            return bookViewModel;
-        }).ToList();
+            query = query.Where(b => b.Title.Contains(request.Title));
+        }
 
-        var pagedList = Paging<BookViewModel>.Create(request.PageSize, request.PageNumber, totalCount, viewModel);
+        if (!string.IsNullOrWhiteSpace(request.Author))
+        {
+            query = query.Where(b => b.Author.Contains(request.Author));
+        }
 
-        return pagedList;
+        query = request.OrderType == OrderType.Ascending
+            ? query.OrderBy(b => b.Title)
+            : query.OrderByDescending(b => b.Title);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var pageIndex = request.PageNumber > 0 ? request.PageNumber - 1 : 0;
+        var data = await query
+            .Skip(pageIndex * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync(cancellationToken);
+
+        var viewModels = data.Select(b => new BookViewModel(b.Id, b.Title, b.Author, b.Stock, b.Price));
+
+        return new PaginatedResult<BookViewModel>(pageIndex, request.PageSize, totalCount, viewModels);
     }
 }
