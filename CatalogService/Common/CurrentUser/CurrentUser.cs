@@ -3,7 +3,7 @@ using CatalogService.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace CatalogService.Presentation.Extentions;
+namespace CatalogService.Presentation.Common.CurrentUser;
 
 public class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUser
 {

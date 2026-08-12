@@ -3,7 +3,7 @@ using CatalogService;
 using CatalogService.Application.Common.CurrentUser;
 using CatalogService.Application.DI;
 using CatalogService.Infrastructure.DI;
-using CatalogService.Presentation.Extentions;
+using CatalogService.Presentation.Common.CurrentUser;
 
 var builder = WebApplication.CreateBuilder(args);
 
