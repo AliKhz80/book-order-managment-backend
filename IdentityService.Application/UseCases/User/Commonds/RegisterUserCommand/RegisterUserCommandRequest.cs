@@ -1,4 +1,5 @@
-﻿using IdentityService.Application.UseCases.User.ViewModels;
+using BuildingBlocks.CQRS;
+using IdentityService.Application.UseCases.User.ViewModels;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IdentityService.Application.UseCases.User.Commonds.RegisterUserCommand
 {
-    public class RegisterUserCommandRequest : IRequest<UserResponseDto>
+    public class RegisterUserCommandRequest : ICommand<UserResponseDto>
     {
         [Required(ErrorMessage = "FullName is required.")]
         [StringLength(100, ErrorMessage = "FullName cannot exceed 100 characters.")]

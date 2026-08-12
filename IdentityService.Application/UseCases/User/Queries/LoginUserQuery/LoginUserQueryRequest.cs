@@ -1,4 +1,5 @@
-﻿using IdentityService.Application.UseCases.User.ViewModels;
+using BuildingBlocks.CQRS;
+using IdentityService.Application.UseCases.User.ViewModels;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IdentityService.Application.UseCases.User.Queries.LoginUserQuery
 {
-    public class LoginUserQueryRequest : IRequest<UserResponseDto>
+    public class LoginUserQueryRequest : IQuery<UserResponseDto>
     {
         [Required(ErrorMessage = "UserName is required.")]
         public string UserName { get; set; } = string.Empty;

@@ -1,5 +1,5 @@
 using OrderService.Domain.Entities.BaseEntity;
-using OrderService.Domain.Specification;
+using BuildingBlocks.Specification;
 using System.Numerics;
 
 namespace OrderService.Domain.Interfaces.Repositories;

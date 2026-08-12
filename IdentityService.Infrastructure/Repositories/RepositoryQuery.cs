@@ -1,6 +1,6 @@
-﻿using IdentityService.Domain.Entities.BaseEntity;
+using IdentityService.Domain.Entities.BaseEntity;
 using IdentityService.Domain.Interfaces.Repositories;
-using IdentityService.Domain.Specification;
+using BuildingBlocks.Specification;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 

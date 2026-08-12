@@ -1,5 +1,5 @@
-﻿using IdentityService.Domain.Entities.BaseEntity;
-using IdentityService.Domain.Specification;
+using IdentityService.Domain.Entities.BaseEntity;
+using BuildingBlocks.Specification;
 using System.Numerics;
 
 namespace IdentityService.Domain.Interfaces.Repositories

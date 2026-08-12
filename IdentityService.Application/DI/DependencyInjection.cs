@@ -19,7 +19,10 @@ namespace IdentityService.Application.DI
         private static IServiceCollection RegisterMediatR(this IServiceCollection services)
         {
             services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+            {
+                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+                cfg.AddOpenBehavior(typeof(BuildingBlocks.Behaviors.LoggingBehavior<,>));
+            });
 
             return services;
         }

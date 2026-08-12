@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace CatalogService.Application.Common.Validation
+namespace BuildingBlocks.Behaviors
 {
     public static class ValidationBehavior
     {

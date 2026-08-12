@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
-namespace CatalogService.Domain.Specification;
+namespace BuildingBlocks.Specification;
 
 public abstract class Specification<TEntity>
 {

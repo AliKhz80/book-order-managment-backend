@@ -1,3 +1,4 @@
+using BuildingBlocks.CQRS;
 using MediatR;
 using Auth;
 using IdentityService.Domain.Interfaces.Repositories.BusinessIRepositories.UserRepository;
@@ -10,7 +11,7 @@ namespace IdentityService.Application.UseCases.User.Queries.LoginUserQuery
 {
   
 
-    public class LoginUserQueryHandler : IRequestHandler<LoginUserQueryRequest, UserResponseDto>
+    public class LoginUserQueryHandler : IQueryHandler<LoginUserQueryRequest, UserResponseDto>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;

@@ -1,3 +1,4 @@
+using BuildingBlocks.CQRS;
 using MediatR;
 using OrderService.Application.UseCases.Order.StockResultEvents.EventModels;
 using OrderService.Domain.Entities;
@@ -9,7 +10,7 @@ namespace OrderService.Application.UseCases.Order.Commands.AddOrder;
 public class AddOrderCommandHandler(
     IOrderRepository orderRepository,
     IOrderUnitOfWork unitOfWork,
-    IEventBus eventBus) : IRequestHandler<AddOrderCommand, long>
+    IEventBus eventBus) : ICommandHandler<AddOrderCommand, long>
 {
     public async Task<long> Handle(AddOrderCommand request, CancellationToken cancellationToken)
     {

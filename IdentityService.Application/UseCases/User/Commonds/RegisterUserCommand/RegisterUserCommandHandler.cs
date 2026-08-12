@@ -1,3 +1,4 @@
+using BuildingBlocks.CQRS;
 using MediatR;
 using Auth;
 using IdentityService.Domain.Interfaces;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IdentityService.Application.UseCases.User.Commonds.RegisterUserCommand
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommandRequest, UserResponseDto>
+    public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommandRequest, UserResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;

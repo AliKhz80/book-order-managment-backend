@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using MediatR;
-using IdentityService.Application.Common.Validation;
+using BuildingBlocks.Behaviors;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

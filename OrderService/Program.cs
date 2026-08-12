@@ -41,7 +41,11 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
+builder.Services.AddExceptionHandler<BuildingBlocks.Exceptions.Handler.CustomExceptionHandler>();
+
 var app = builder.Build();
+
+app.UseExceptionHandler(options => { });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
