@@ -1,5 +1,5 @@
-using OrderService.Application.Messaging;
-using OrderService.Application.UseCases.Order.StockResultEvents.EventModels;
+using MassTransit;
+using OrderService.Domain.Events;
 using OrderService.Domain.Enums;
 using OrderService.Domain.Interfaces;
 
@@ -7,16 +7,17 @@ namespace OrderService.Application.UseCases.Order.StockResultEvents;
 
 public class StockFailedEventHandler(
     IOrderRepository orderRepository,
-    IOrderUnitOfWork unitOfWork) : IIntegrationEventHandler<StockFailedEvent>
+    IOrderUnitOfWork unitOfWork) : IConsumer<StockFailedEvent>
 {
-    public async Task HandleAsync(StockFailedEvent @event, CancellationToken cancellationToken = default)
+    public async Task Consume(ConsumeContext<StockFailedEvent> context)
     {
-        var order = await orderRepository.GetByIdAsync(@event.OrderId, cancellationToken)
+        var @event = context.Message;
+        var order = await orderRepository.GetByIdAsync(@event.OrderId, context.CancellationToken)
             ?? throw new InvalidOperationException($"Order {@event.OrderId} was not found.");
 
         order.Status = OrderStatus.Failed;
 
-        await orderRepository.UpdateAsync(order, cancellationToken);
-        await unitOfWork.CommitAsync(cancellationToken);
+        await orderRepository.UpdateAsync(order, context.CancellationToken);
+        await unitOfWork.CommitAsync(context.CancellationToken);
     }
 }

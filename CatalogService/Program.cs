@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
+using BuildingBlocks.Messaging;
 using Marten;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,9 @@ builder.Services.AddMediatR(cfg =>
 
 // Register CustomExceptionHandler
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+// Add MassTransit with RabbitMq
+builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, typeof(Program).Assembly);
 
 // Add Endpoints API Explorer & Swagger
 builder.Services.AddEndpointsApiExplorer();

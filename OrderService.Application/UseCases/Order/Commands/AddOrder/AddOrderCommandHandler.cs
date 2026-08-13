@@ -1,6 +1,7 @@
 using BuildingBlocks.CQRS;
+using MassTransit;
 using MediatR;
-using OrderService.Application.UseCases.Order.StockResultEvents.EventModels;
+using OrderService.Domain.Events;
 using OrderService.Domain.Entities;
 using OrderService.Domain.Enums;
 using OrderService.Domain.Interfaces;
@@ -10,7 +11,7 @@ namespace OrderService.Application.UseCases.Order.Commands.AddOrder;
 public class AddOrderCommandHandler(
     IOrderRepository orderRepository,
     IOrderUnitOfWork unitOfWork,
-    IEventBus eventBus) : ICommandHandler<AddOrderCommand, long>
+    IPublishEndpoint publishEndpoint) : ICommandHandler<AddOrderCommand, long>
 {
     public async Task<long> Handle(AddOrderCommand request, CancellationToken cancellationToken)
     {
@@ -23,9 +24,8 @@ public class AddOrderCommandHandler(
 
         await orderRepository.AddAsync(order, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);
-        await eventBus.PublishAsync(
+        await publishEndpoint.Publish(
             new OrderCreatedEvent(order.Id, order.BookId, order.Quantity),
-            "order.created",
             cancellationToken);
 
         return order.Id;
