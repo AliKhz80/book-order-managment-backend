@@ -14,7 +14,7 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 // Register Layers
 builder.Services.ConfigureInfrastructureLayer(builder.Configuration);
-builder.Services.ConfigureApplicationLayer();
+builder.Services.ConfigureApplicationLayer(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -16,9 +16,7 @@ public static class DependencyInjection
     {
         services
             .RegisterDbContext(configuration)
-            .RegisterRepositories()
-            .AddMassTransitWithRabbitMq(configuration, typeof(Application.DI.DependencyInjection).Assembly);
-
+            .RegisterRepositories();
         return services;
     }
 

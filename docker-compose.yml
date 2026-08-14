@@ -66,74 +66,8 @@ services:
     command: >
       sh -c "rabbitmq-plugins enable --offline rabbitmq_tracing && rabbitmq-server"
 
-  catalog-service:
-    build:
-      context: .
-      dockerfile: CatalogService/Dockerfile
-    container_name: book-order-catalog-service
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=catalogdb;Username=postgres;Password=PostgrePassword123!
-      ConnectionStrings__Redis: redis:6379
-      RabbitMq__HostName: rabbitmq
-      RabbitMq__Port: 5672
-      RabbitMq__UserName: guest
-      RabbitMq__Password: guest
-      RabbitMq__ExchangeName: book-order-management
-      RabbitMq__QueuePrefix: catalog
-    ports:
-      - "5001:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    restart: unless-stopped
 
-  order-service:
-    build:
-      context: .
-      dockerfile: OrderService/Dockerfile
-    container_name: book-order-order-service
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__BookOrderManagementDB: Server=sqlserver,1433;Database=BookOrderManagementDb;User Id=sa;Password=Aliali123@;TrustServerCertificate=True;Encrypt=false;MultipleActiveResultSets=true;
-      RabbitMq__HostName: rabbitmq
-      RabbitMq__Port: 5672
-      RabbitMq__UserName: guest
-      RabbitMq__Password: guest
-      RabbitMq__ExchangeName: book-order-management
-      RabbitMq__QueuePrefix: order
 
-    ports:
-      - "5002:8080"
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    restart: unless-stopped
-
-  identity-service:
-    build:
-      context: .
-      dockerfile: Identity/Dockerfile
-    container_name: book-order-identity-service
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__BookOrderManagementDB: Server=sqlserver,1433;Database=BookOrderManagementDb;User Id=sa;Password=Aliali123@;TrustServerCertificate=True;Encrypt=false;MultipleActiveResultSets=true;
-
-    ports:
-      - "5000:8080"
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-    restart: unless-stopped
 
 volumes:
   sqlserver-data:

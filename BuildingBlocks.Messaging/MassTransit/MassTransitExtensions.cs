@@ -3,11 +3,11 @@ using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BuildingBlocks.Messaging;
+namespace BuildingBlocks.Messaging.MassTransit;
 
 public static class MassTransitExtensions
 {
-    public static IServiceCollection AddMassTransitWithRabbitMq(
+    public static IServiceCollection AddMessageBroker(
         this IServiceCollection services,
         IConfiguration configuration,
         Assembly? assembly = null)

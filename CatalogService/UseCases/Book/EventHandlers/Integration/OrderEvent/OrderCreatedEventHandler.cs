@@ -1,9 +1,7 @@
-using CatalogService.Entities;
-using CatalogService.Events;
-using CatalogService.UseCases.Book;
 using Marten;
 using MassTransit;
 using Microsoft.Extensions.Caching.Distributed;
+using OrderService.Domain.Events;
 
 namespace CatalogService.UseCases.Book.OrderEvent;
 

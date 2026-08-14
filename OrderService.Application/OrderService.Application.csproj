@@ -16,4 +16,8 @@
     <ProjectReference Include="..\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Order\EventHandlers\Integration\" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,9 @@
 using Asp.Versioning;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
-using BuildingBlocks.Messaging;
+using BuildingBlocks.Messaging.MassTransit;
+using Catalog.API.Data;
+using CatalogService.Entities;
 using Marten;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,16 +13,17 @@ builder.Services.AddControllers();
 // Configure Marten for PostgreSQL document storage
 builder.Services.AddMarten(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("Postgres")
-        ?? builder.Configuration.GetConnectionString("BookOrderManagementDB")
-        ?? "Host=postgres;Port=5432;Database=catalogdb;Username=postgres;Password=PostgrePassword123!";
-    options.Connection(connectionString);
+    var connectionString = builder.Configuration.GetConnectionString("Postgres");
+    options.Connection(connectionString!);
 }).UseLightweightSessions();
+
+if (builder.Environment.IsDevelopment())
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
 
 // Add Redis cache
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
 
 // Configure MediatR with LoggingBehavior
@@ -33,8 +36,9 @@ builder.Services.AddMediatR(cfg =>
 // Register CustomExceptionHandler
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+
 // Add MassTransit with RabbitMq
-builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, typeof(Program).Assembly);
+builder.Services.AddMessageBroker(builder.Configuration, typeof(Program).Assembly);
 
 // Add Endpoints API Explorer & Swagger
 builder.Services.AddEndpointsApiExplorer();
